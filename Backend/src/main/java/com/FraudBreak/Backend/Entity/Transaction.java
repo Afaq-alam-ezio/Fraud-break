@@ -33,6 +33,8 @@ public class Transaction {
     private TransactionStatus status = TransactionStatus.PENDING;
 
     private int riskScore;
+
+    @Column(columnDefinition = "TEXT")
     private String aiExplanation;
 
     @ManyToOne                           // many Transactions can belong to one User

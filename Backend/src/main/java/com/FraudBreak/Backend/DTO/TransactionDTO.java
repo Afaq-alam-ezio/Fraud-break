@@ -29,9 +29,9 @@ public class TransactionDTO{
     @NotBlank
     private String merchantCategory;
 
-    @NotNull
-    private LocalDateTime timestamp;
-
-    @Nullable
-    TransactionStatus status;
+//    @NotNull
+//    private LocalDateTime timestamp;
+//
+//    @Nullable
+//    TransactionStatus status;
 }

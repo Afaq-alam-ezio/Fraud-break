@@ -3,6 +3,7 @@ package com.FraudBreak.Backend.Kafka.Producer;
 import com.FraudBreak.Backend.Configs.Mappers.TransactionMapStruct;
 import com.FraudBreak.Backend.DTO.TransactionDTO;
 import com.FraudBreak.Backend.Entity.Transaction;
+import com.FraudBreak.Backend.Entity.User;
 import com.FraudBreak.Backend.Repository.TransactionsRepo;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +20,10 @@ public class TransactionProducerService {
     private final TransactionMapStruct mapToStructMapper;
     private final TransactionsRepo transactionsRepo;
 
-    public void sendMessage(TransactionDTO data) {
+    public void sendMessage(TransactionDTO data, User user) {
 
         Transaction messageData = mapToStructMapper.toEntity(data);
+        messageData.setUser(user);
 
         Transaction savedData = transactionsRepo.save(messageData);
 

@@ -1,6 +1,7 @@
 package com.FraudBreak.Backend.Service;
 
 import com.FraudBreak.Backend.Configs.Mappers.TransactionMapStruct;
+import com.FraudBreak.Backend.DTO.CredDTO;
 import com.FraudBreak.Backend.DTO.TransactionDTO;
 import com.FraudBreak.Backend.Entity.Transaction;
 import com.FraudBreak.Backend.Repository.TransactionsRepo;
@@ -28,5 +29,10 @@ public class TransactionService {
         Transaction saveData = mapToStructMapper.toEntity(data);
 
         return transactionsRepo.save(saveData);
+    }
+
+    public List<Transaction> getTransactionsForUser(String userId) {
+
+        return transactionsRepo.findByUser_UserId(userId);
     }
 }
