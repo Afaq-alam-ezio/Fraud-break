@@ -1,0 +1,123 @@
+@import "tailwindcss";
+
+/* Design tokens. "static" makes Tailwind always write them out, so the plain CSS below can use var(). */
+@theme static {
+  --color-pearl: #f4f1ea;   /* primary buttons */
+  --color-ink: #0d2b31;     /* text on pearl */
+  --color-mint: #6fe3b0;    /* clean */
+  --color-coral: #ff8f80;   /* suspicious, and errors */
+  --color-amber: #f4c76b;   /* pending */
+
+  --font-display: "Newsreader", Georgia, "Times New Roman", serif;
+  --font-sans: "Hanken Grotesk", ui-sans-serif, system-ui, sans-serif;
+}
+
+/* The gradient lives on <html> (the page canvas). That keeps it underneath the glowing orbs below. */
+html {
+  background: linear-gradient(160deg, #0a2026 0%, #0d3037 55%, #091c21 100%) fixed;
+  background-color: #0a2026; /* fallback so nothing light ever shows */
+}
+
+body {
+  min-height: 100vh;
+  color: rgb(255 255 255 / 0.92);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Three soft glowing orbs fixed behind everything. The glass panels blur them, which is what makes the glass look. */
+body::before,
+body::after,
+#root::before {
+  content: '';
+  position: fixed;
+  z-index: -1;
+  border-radius: 9999px;
+  pointer-events: none;
+}
+body::before {
+  width: 42rem; height: 42rem; left: -12rem; top: -14rem;
+  background: radial-gradient(circle, rgb(95 181 154 / 0.55), transparent 68%);
+}
+body::after {
+  width: 38rem; height: 38rem; right: -10rem; top: 10%;
+  background: radial-gradient(circle, rgb(231 178 90 / 0.4), transparent 68%);
+}
+#root::before {
+  width: 44rem; height: 44rem; left: 30%; bottom: -22rem;
+  background: radial-gradient(circle, rgb(224 96 79 / 0.38), transparent 68%);
+}
+
+:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
+
+@layer components {
+  /* The frosted glass panel. */
+  .glass {
+    background: linear-gradient(135deg, rgb(255 255 255 / 0.14), rgb(255 255 255 / 0.05));
+    border: 1px solid rgb(255 255 255 / 0.18);
+    border-radius: 1.25rem;
+    box-shadow: 0 8px 32px rgb(0 0 0 / 0.28), inset 0 1px 0 rgb(255 255 255 / 0.22);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    backdrop-filter: blur(18px) saturate(140%);
+  }
+
+  /* People who asked their system for less transparency get solid panels. */
+  @media (prefers-reduced-transparency: reduce) {
+    .glass {
+      background: #15414a;
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+    }
+  }
+
+  .field {
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    padding: 0.7rem 0.9rem;
+    font-size: 1rem;
+    color: #fff;
+    border-radius: 0.75rem;
+    border: 1px solid rgb(255 255 255 / 0.25);
+    background: rgb(255 255 255 / 0.08);
+  }
+  .field::placeholder { color: rgb(255 255 255 / 0.45); }
+  .field:focus { background: rgb(255 255 255 / 0.14); border-color: rgb(255 255 255 / 0.6); }
+
+  .btn-primary {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-ink);
+    background: var(--color-pearl);
+    border-radius: 0.75rem;
+  }
+  .btn-primary:hover { background: #fff; }
+  .btn-primary:disabled { opacity: 0.6; }
+
+  .btn-ghost {
+    padding: 0.4rem 0.9rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border-radius: 9999px;
+    border: 1px solid rgb(255 255 255 / 0.3);
+  }
+  .btn-ghost:hover { background: rgb(255 255 255 / 0.12); }
+}
+
+/* The one moment of motion: a stamp lands once. */
+@keyframes stamp-in {
+  0%   { opacity: 0; transform: scale(1.7); }
+  60%  { opacity: 1; transform: scale(0.94); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.stamp-in {
+  animation: stamp-in 420ms cubic-bezier(0.2, 0.8, 0.3, 1) 500ms both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .stamp-in { animation: none; }
+}

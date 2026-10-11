@@ -17,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -48,7 +49,7 @@ public class TransactionController {
 
          List<Transaction> data= transactionService.fetchAllTransactions();
 
-         log.debug("Transaction list fetched is {}", data);
+         log.debug("Transaction list fetched is {}", data.size());
 
          return new ResponseEntity<>(data, HttpStatus.OK);
     }
@@ -87,15 +88,14 @@ public class TransactionController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(
-            @Valid @RequestBody CredDTO creds,
-            @AuthenticationPrincipal User user
-    ){
+    public ResponseEntity<?> login(@Valid @RequestBody CredDTO creds){
 
         try{
 
-            authenticationManager.authenticate(
+            Authentication auth = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(creds.getEmail(), creds.getPassword()));
+
+            User user = (User) auth.getPrincipal();
 
             String jwtToken = jwtUtil.generateToken(creds.getEmail());
 
